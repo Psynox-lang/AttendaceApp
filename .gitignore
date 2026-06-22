@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+
+attendance.db
+
+.idea/
+.vscode/
+
+build/
+.dart_tool/
+
+android/.gradle/
