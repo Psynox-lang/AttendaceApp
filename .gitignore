@@ -1,13 +1,17 @@
-venv/
+# Python
 __pycache__/
 *.pyc
+venv/
+*.db
+# Flutter
+Frontend/attendance_app/.dart_tool/
+Frontend/attendance_app/build/
+Frontend/attendance_app/.flutter-plugins
+Frontend/attendance_app/.flutter-plugins-dependencies
 
-attendance.db
-
+# Android Studio
 .idea/
-.vscode/
+*.iml
 
-build/
-.dart_tool/
-
-android/.gradle/
+# Local config
+android/local.properties

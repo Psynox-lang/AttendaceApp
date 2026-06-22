@@ -38,6 +38,8 @@ def check_in(
     db.commit()
     db.refresh(attendance)
 
+    update_excel(attendance)
+
     return {
         "message": "Check In Successful",
         "date": str(attendance.date),
@@ -72,6 +74,8 @@ def check_out(
 
     db.commit()
     db.refresh(attendance)
+
+    update_excel(attendance)
 
     return {
         "message": "Check Out Successful",
@@ -179,3 +183,37 @@ def status(
         "check_out": attendance.check_out,
         "approved": attendance.approved
     }
+
+from datetime import date
+
+@router.delete("/reset")
+def reset_today(
+    db: Session = Depends(get_db)
+):
+
+    attendance = (
+        db.query(Attendance)
+        .filter(
+            Attendance.date == date.today()
+        )
+        .first()
+    )
+
+    if attendance:
+        db.delete(attendance)
+        db.commit()
+
+    return {
+        "message": "Today's attendance cleared"
+    }
+
+from fastapi.responses import FileResponse
+
+@router.get("/download-excel")
+def download_excel():
+
+    return FileResponse(
+        path="/home/utkarsh/attendance-app/AttendaceApp/Intern Attendance Sheet Format __ Utkarsh.xlsx",
+        filename="attendance.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
