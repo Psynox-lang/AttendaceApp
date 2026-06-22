@@ -426,6 +426,39 @@ if (checkedOut)
       ),
     ],
   ),
+  const SizedBox(height: 12),
+if (checkedIn)
+ElevatedButton(
+  onPressed: () async {
+
+    await ApiService.deleteToday();
+
+    await loadAttendance();
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Attendance Deleted",
+        ),
+      ),
+    );
+  },
+
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.red,
+    foregroundColor: Colors.white,
+    padding: const EdgeInsets.symmetric(
+      vertical: 16,
+    ),
+  ),
+
+  child: const Text(
+    "DELETE RECORD",
+  ),
+),
           ],
         ),
       ),

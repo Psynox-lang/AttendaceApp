@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import Attendance
-from services.excel_service import update_excel
-
+from services.sheets_service import update_google_sheet
+from services.sheets_service import (
+    update_google_sheet,
+    sheet
+)
 from datetime import datetime, date
 
 router = APIRouter(tags=["Attendance"])
@@ -38,7 +41,7 @@ def check_in(
     db.commit()
     db.refresh(attendance)
 
-    update_excel(attendance)
+    update_google_sheet(attendance)
 
     return {
         "message": "Check In Successful",
@@ -75,7 +78,7 @@ def check_out(
     db.commit()
     db.refresh(attendance)
 
-    update_excel(attendance)
+    update_google_sheet(attendance)
 
     return {
         "message": "Check Out Successful",
@@ -105,7 +108,7 @@ def approve_attendance(
 
     db.commit()
 
-    update_excel(attendance)
+    update_google_sheet(attendance)
 
     return {
         "message": "Attendance Approved and Excel Updated"
@@ -154,7 +157,7 @@ def test_excel(
             "error": "No attendance record found"
         }
 
-    update_excel(attendance)
+    update_google_sheet(attendance)
 
     return {
         "message": "Excel Updated Successfully"
@@ -217,3 +220,37 @@ def download_excel():
         filename="attendance.xlsx",
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+@router.delete("/delete-today")
+def delete_today(
+    db: Session = Depends(get_db)
+):
+
+    attendance = (
+        db.query(Attendance)
+        .filter(
+            Attendance.date == date.today()
+        )
+        .first()
+    )
+
+    if not attendance:
+        return {
+            "message":
+            "No attendance found"
+        }
+
+    row = attendance.date.day + 1
+
+    sheet.update(f"C{row}", [[""]])
+    sheet.update(f"D{row}", [[""]])
+    sheet.update(f"F{row}", [[""]])
+    sheet.update(f"G{row}", [[""]])
+
+    db.delete(attendance)
+    db.commit()
+
+    return {
+        "message":
+        "Attendance deleted"
+    }

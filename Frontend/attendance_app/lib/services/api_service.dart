@@ -3,8 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String baseUrl =
-      "http://10.99.191.76:8000";
+  static const String baseUrl = "http://127.0.0.1:8000";
 
   static Future<void> checkIn() async {
 
@@ -28,6 +27,15 @@ class ApiService {
 
   await http.delete(
     Uri.parse("$baseUrl/reset"),
+  );
+}
+  static Future<void> deleteToday()
+async {
+
+  await http.delete(
+    Uri.parse(
+      "$baseUrl/delete-today",
+    ),
   );
 }
 
