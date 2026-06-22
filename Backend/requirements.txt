@@ -1,0 +1,6 @@
+fastapi==0.138.0
+gspread==6.2.1
+openpyxl==3.1.5
+protobuf==7.35.1
+pydantic==2.13.4
+SQLAlchemy==2.0.51
