@@ -8,7 +8,13 @@ from services.sheets_service import (
     update_google_sheet,
     sheet
 )
-from datetime import datetime, date
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+def get_ist_time():
+    return datetime.now(
+        ZoneInfo("Asia/Kolkata")
+    ).time()
 
 router = APIRouter(tags=["Attendance"])
 
@@ -32,10 +38,10 @@ def check_in(
         }
 
     attendance = Attendance(
-        date=date.today(),
-        check_in=datetime.now().time(),
-        approved=False
-    )
+    date=date.today(),
+    check_in=get_ist_time(),
+    approved=False
+)
 
     db.add(attendance)
     db.commit()
@@ -73,7 +79,7 @@ def check_out(
             "error": "Already checked out"
         }
 
-    attendance.check_out = datetime.now().time()
+    attendance.check_out = get_ist_time()
 
     db.commit()
     db.refresh(attendance)
