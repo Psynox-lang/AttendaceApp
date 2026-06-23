@@ -28,72 +28,101 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
 
   Future<void> loadAttendance() async {
 
-  final data = await ApiService.getStatus();
+  try {
 
-  setState(() {
-    attendanceData = data;
-    loading = false;
-  });
+    final data =
+        await ApiService.getStatus();
 
-  if (data?["checked_in"] == true) {
+    print("STATUS DATA = $data");
 
-    final checkInString = data?["check_in"];
+    setState(() {
+      attendanceData = data;
+      loading = false;
+    });
 
-    if (checkInString != null) {
+    if (data?["checked_in"] == true) {
 
-      final now = DateTime.now();
+      final checkInString =
+          data?["check_in"];
 
-      final parts = checkInString.split(":");
+      if (checkInString != null) {
 
-      final checkIn = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        int.parse(parts[0]),
-        int.parse(parts[1]),
-        int.parse(parts[2].split(".")[0]),
-      );
+        final now = DateTime.now();
 
-      if (data?["check_out"] != null) {
+        final parts =
+            checkInString.split(":");
 
-        final checkOutString = data?["check_out"];
-
-        final outParts = checkOutString.split(":");
-
-        final checkOut = DateTime(
+        final checkIn = DateTime(
           now.year,
           now.month,
           now.day,
-          int.parse(outParts[0]),
-          int.parse(outParts[1]),
-          int.parse(outParts[2].split(".")[0]),
+          int.parse(parts[0]),
+          int.parse(parts[1]),
+          int.parse(
+            parts[2]
+                .split(".")[0],
+          ),
         );
 
-        setState(() {
-          workedDuration =
-              checkOut.difference(checkIn);
-        });
+        if (data?["check_out"] != null) {
 
-        stopTimer();
+          final checkOutString =
+              data?["check_out"];
 
-      } else {
+          final outParts =
+              checkOutString.split(":");
 
-        setState(() {
-          workedDuration =
-              now.difference(checkIn);
-        });
+          final checkOut = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            int.parse(outParts[0]),
+            int.parse(outParts[1]),
+            int.parse(
+              outParts[2]
+                  .split(".")[0],
+            ),
+          );
 
-        startTimer();
+          setState(() {
+            workedDuration =
+                checkOut.difference(
+                    checkIn);
+          });
+
+          stopTimer();
+
+        } else {
+
+          setState(() {
+            workedDuration =
+                now.difference(
+                    checkIn);
+          });
+
+          print("STARTING TIMER");
+
+          startTimer();
+        }
       }
+
+    } else {
+
+      setState(() {
+        workedDuration =
+            Duration.zero;
+      });
+
+      stopTimer();
     }
 
-  } else {
+  } catch (e) {
+
+    print("LOAD ERROR: $e");
 
     setState(() {
-      workedDuration = Duration.zero;
+      loading = false;
     });
-
-    stopTimer();
   }
 }
   Future<void> downloadExcel() async {
@@ -250,6 +279,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    const Text(
+                    "Render Build v1",
                     ),
 
                     const SizedBox(height: 25),

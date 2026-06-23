@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
 
-  static const String baseUrl = "http://127.0.0.1:8000";
+  static const String baseUrl =
+    "https://attendaceapp-nmyh.onrender.com";
 
   static Future<void> checkIn() async {
 
@@ -41,16 +42,21 @@ async {
 
   static Future<Map<String, dynamic>?> getStatus() async {
 
-    final response = await http.get(
-      Uri.parse("$baseUrl/status"),
-    );
+  print("Calling status endpoint...");
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    }
+  final response = await http.get(
+    Uri.parse("$baseUrl/status"),
+  );
 
-    return null;
+  print("Status code: ${response.statusCode}");
+  print("Body: ${response.body}");
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
   }
+
+  return null;
+}
 
   static Future<void> approveAttendance() async {
 
