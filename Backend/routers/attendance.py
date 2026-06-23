@@ -19,6 +19,13 @@ def get_ist_time():
 router = APIRouter(tags=["Attendance"])
 
 
+
+def get_ist_date():
+    return datetime.now(
+        ZoneInfo("Asia/Kolkata")
+    ).date()
+
+
 @router.post("/checkin")
 def check_in(
     db: Session = Depends(get_db)
@@ -27,7 +34,7 @@ def check_in(
     existing_record = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
@@ -38,7 +45,7 @@ def check_in(
         }
 
     attendance = Attendance(
-    date=date.today(),
+    date=get_ist_date(),
     check_in=get_ist_time(),
     approved=False
 )
@@ -64,7 +71,7 @@ def check_out(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_time()
         )
         .first()
     )
@@ -100,7 +107,7 @@ def approve_attendance(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
@@ -129,7 +136,7 @@ def get_today_attendance(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
@@ -153,7 +160,7 @@ def test_excel(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
@@ -176,7 +183,7 @@ def status(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
@@ -203,7 +210,7 @@ def reset_today(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
@@ -235,7 +242,7 @@ def delete_today(
     attendance = (
         db.query(Attendance)
         .filter(
-            Attendance.date == date.today()
+            Attendance.date == get_ist_date()
         )
         .first()
     )
