@@ -275,3 +275,9 @@ def debug(db: Session = Depends(get_db)):
         }
         for record in records
     ]
+
+@router.get("/count")
+def count(db: Session = Depends(get_db)):
+    return {
+        "rows": db.query(Attendance).count()
+    }
