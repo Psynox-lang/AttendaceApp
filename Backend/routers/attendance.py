@@ -281,3 +281,12 @@ def count(db: Session = Depends(get_db)):
     return {
         "rows": db.query(Attendance).count()
     }
+
+@router.get("/db-info")
+def db_info():
+
+    import os
+
+    return {
+        "database_url": os.getenv("DATABASE_URL")
+    }
