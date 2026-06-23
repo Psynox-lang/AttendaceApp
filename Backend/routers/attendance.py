@@ -297,3 +297,10 @@ def db_info():
     return {
         "database_url": os.getenv("DATABASE_URL")
     }
+
+@router.get("/server-date")
+def server_date():
+    return {
+        "utc": str(date.today()),
+        "ist": str(get_ist_date())
+    }
