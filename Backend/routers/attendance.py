@@ -262,18 +262,12 @@ def delete_today(
     }
 
 @router.get("/debug")
-def debug(
-    db: Session = Depends(get_db)
-):
+def debug(db: Session = Depends(get_db)):
 
-    records = (
-        db.query(Attendance)
-        .all()
-    )
+    records = db.query(Attendance).all()
 
     return [
         {
-            "id": record.id,
             "date": str(record.date),
             "check_in": str(record.check_in),
             "check_out": str(record.check_out),
